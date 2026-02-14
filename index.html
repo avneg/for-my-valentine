@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Valentine's Delivery for Leica</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -16,17 +16,25 @@
             --bg-nature: linear-gradient(180deg, #93d5ed 0%, #b3e5fc 40%, #a5d6a7 80%, #66bb6a 100%);
         }
 
-        /* Fixed height for Safari mobile */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
-            height: 100dvh; 
+            height: 100dvh; /* Dynamic height for Safari */
             width: 100vw;
             overflow: hidden;
             font-family: 'VT323', monospace;
             background: var(--bg-nature);
             transition: background 2s ease-in-out;
-            touch-action: manipulation; /* Prevents accidental zooming */
+            touch-action: manipulation;
+            
+            /* Handles iOS safe areas (Notch/Home Bar) */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* --- Falling Petals --- */
@@ -47,16 +55,23 @@
             100% { transform: translateY(110dvh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- Scene 1: Delivery --- */
-        #delivery-scene {
+        /* --- Scene Containers --- */
+        #delivery-scene, #gift-scene {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100dvh;
+            height: 100%;
+            width: 100%;
             padding: 20px;
         }
 
+        #gift-scene {
+            display: none;
+            justify-content: space-evenly; 
+        }
+
+        /* --- Scene 1 Content --- */
         .bubble {
             background: var(--stardew-beige);
             border: 4px solid var(--stardew-brown);
@@ -65,15 +80,16 @@
             font-size: clamp(20px, 6vw, 28px);
             color: var(--stardew-brown);
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: center;
-            width: 80%;
+            width: 90%;
             max-width: 400px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
 
         .driver-img {
-            width: 70%;
-            max-width: 250px;
+            height: 35dvh;
+            width: auto;
             image-rendering: pixelated;
         }
 
@@ -81,8 +97,6 @@
             margin-top: 30px;
             display: flex;
             gap: 20px;
-            justify-content: center;
-            width: 100%;
         }
 
         .pixel-btn {
@@ -96,31 +110,20 @@
             box-shadow: 4px 4px 0px var(--stardew-brown);
             outline: none;
             text-shadow: 1px 1px var(--stardew-brown);
-            -webkit-tap-highlight-color: transparent;
         }
 
         #accept-btn { background-color: var(--pastel-blue); }
         #throw-btn { background-color: var(--pastel-pink); }
 
-        /* --- Scene 2: Reveal --- */
-        #gift-scene {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100dvh;
-            padding: 10px;
-        }
-
+        /* --- Scene 2 Content --- */
         .bouquet-large {
-            width: 90vw;
-            max-width: 500px;
+            height: 30dvh;
+            width: auto;
+            max-width: 90vw;
             image-rendering: pixelated;
-            margin-bottom: 10px;
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
         }
 
-        /* Card Scale for Mobile */
         .card-container {
             perspective: 1500px;
             width: 260px;
@@ -163,19 +166,13 @@
             width: 100%; height: 100%; background-color: #fffaf0;
             z-index: 1; border: 3px solid var(--parchment-border);
             border-radius: 5px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; padding: 20px;
+            align-items: center; justify-content: center; padding: 25px;
             text-align: center; box-sizing: border-box;
         }
 
-        .message-text { 
-            font-size: 19px; 
-            color: var(--stardew-brown); 
-            line-height: 1.3; 
-            white-space: pre-line; 
-        }
+        .message-text { font-size: 20px; color: var(--stardew-brown); line-height: 1.4; white-space: pre-line; }
 
         #click-hint {
-            margin-top: 15px;
             background: rgba(0,0,0,0.4);
             color: white;
             padding: 5px 15px;
@@ -234,14 +231,14 @@
 
         const throwBtn = document.getElementById('throw-btn');
 
-        // Combined logic for Desktop (Hover) and Mobile (Touch)
         function moveButton(e) {
             e.preventDefault(); 
-            const maxX = window.innerWidth - throwBtn.offsetWidth - 20;
-            const maxY = window.innerHeight - throwBtn.offsetHeight - 20;
+            // Ensures button stays within safe visible area
+            const maxX = window.innerWidth - throwBtn.offsetWidth - 30;
+            const maxY = window.innerHeight - throwBtn.offsetHeight - 30;
             throwBtn.style.position = 'fixed';
-            throwBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
-            throwBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
+            throwBtn.style.left = Math.floor(Math.random() * maxX) + 15 + 'px';
+            throwBtn.style.top = Math.floor(Math.random() * maxY) + 15 + 'px';
             throwBtn.style.zIndex = "1000";
         }
 
