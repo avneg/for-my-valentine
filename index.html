@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Valentine's Delivery for Leica</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -13,24 +13,23 @@
             --pastel-blue: #a2d2ff;
             --parchment-light: #fdf5e6;
             --parchment-border: #d2b48c;
-            
-            /* Background Gradients */
             --bg-nature: linear-gradient(180deg, #93d5ed 0%, #b3e5fc 40%, #a5d6a7 80%, #66bb6a 100%);
-            --bg-valentine: linear-gradient(180deg, #ffdde1 0%, #ee9ca7 100%);
         }
 
+        /* Fixed height for Safari mobile */
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
+            height: 100dvh; 
+            width: 100vw;
             overflow: hidden;
             font-family: 'VT323', monospace;
-            /* Initial Nature Background */
             background: var(--bg-nature);
-            transition: background 2s ease-in-out; /* Smooth transition when changing */
+            transition: background 2s ease-in-out;
+            touch-action: manipulation; /* Prevents accidental zooming */
         }
 
-        /* --- Falling Petals Effect --- */
+        /* --- Falling Petals --- */
         .petal {
             position: fixed;
             top: -10%;
@@ -45,74 +44,90 @@
         @keyframes fall {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(110dvh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- Scene 1: Delivery Driver --- */
+        /* --- Scene 1: Delivery --- */
         #delivery-scene {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100dvh;
+            padding: 20px;
         }
 
         .bubble {
             background: var(--stardew-beige);
             border: 4px solid var(--stardew-brown);
             border-radius: 15px;
-            padding: 20px 30px;
-            font-size: 30px;
+            padding: 15px 20px;
+            font-size: clamp(20px, 6vw, 28px);
             color: var(--stardew-brown);
             position: relative;
             margin-bottom: 25px;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
         }
 
-        .bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -18px;
-            left: 40px;
-            border-width: 18px 18px 0;
-            border-style: solid;
-            border-color: var(--stardew-brown) transparent;
+        .driver-img {
+            width: 70%;
+            max-width: 250px;
+            image-rendering: pixelated;
         }
 
-        .driver-img { width: 300px; image-rendering: pixelated; }
-
-        .btn-group { margin-top: 40px; display: flex; gap: 40px; }
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
 
         .pixel-btn {
-            width: 150px; height: 50px;
+            width: 130px;
+            height: 50px;
             font-family: 'VT323', monospace;
-            font-size: 24px; color: white;
-            cursor: pointer; border: 3px solid var(--stardew-brown);
+            font-size: 22px;
+            color: white;
+            cursor: pointer;
+            border: 3px solid var(--stardew-brown);
             box-shadow: 4px 4px 0px var(--stardew-brown);
-            outline: none; text-shadow: 1px 1px var(--stardew-brown);
+            outline: none;
+            text-shadow: 1px 1px var(--stardew-brown);
+            -webkit-tap-highlight-color: transparent;
         }
 
         #accept-btn { background-color: var(--pastel-blue); }
-        #throw-btn { background-color: var(--pastel-pink); transition: none; }
+        #throw-btn { background-color: var(--pastel-pink); }
 
-        /* --- Scene 2: The Reveal --- */
+        /* --- Scene 2: Reveal --- */
         #gift-scene {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100dvh;
+            padding: 10px;
         }
 
         .bouquet-large {
-            width: 550px;
+            width: 90vw;
+            max-width: 500px;
             image-rendering: pixelated;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
         }
 
-        .card-container { perspective: 1500px; width: 280px; height: 380px; cursor: pointer; position: relative; }
+        /* Card Scale for Mobile */
+        .card-container {
+            perspective: 1500px;
+            width: 260px;
+            height: 350px;
+            cursor: pointer;
+            position: relative;
+        }
 
         .card-inner {
             width: 100%; height: 100%;
@@ -121,7 +136,7 @@
             transform-origin: left; z-index: 2;
         }
 
-        .card-inner.is-open { transform: rotateY(-170deg); }
+        .card-inner.is-open { transform: rotateY(-165deg); }
 
         .card-face {
             position: absolute; width: 100%; height: 100%;
@@ -148,17 +163,22 @@
             width: 100%; height: 100%; background-color: #fffaf0;
             z-index: 1; border: 3px solid var(--parchment-border);
             border-radius: 5px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; padding: 25px;
+            align-items: center; justify-content: center; padding: 20px;
             text-align: center; box-sizing: border-box;
         }
 
-        .message-text { font-size: 20px; color: var(--stardew-brown); line-height: 1.4; white-space: pre-line; }
+        .message-text { 
+            font-size: 19px; 
+            color: var(--stardew-brown); 
+            line-height: 1.3; 
+            white-space: pre-line; 
+        }
 
         #click-hint {
-            margin-top: 15px; 
-            background: rgba(0,0,0,0.4); 
-            color: white; 
-            padding: 5px 15px; 
+            margin-top: 15px;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            padding: 5px 15px;
             border-radius: 20px;
             font-size: 18px;
         }
@@ -181,7 +201,7 @@
             <div class="card-inner" id="card">
                 <div class="card-face card-front">
                     <img src="photo.png" class="us-photo-cover" alt="Our Photo">
-                    <p style="margin-top: 10px; color: var(--stardew-brown); font-size: 20px;">For Leica ❤️</p>
+                    <p style="margin-top: 10px; color: var(--stardew-brown); font-size: 18px;">For Leica ❤️</p>
                 </div>
                 <div class="card-face card-inside-left"></div>
             </div>
@@ -197,16 +217,15 @@
                 Aly</p>
             </div>
         </div>
-        <p id="click-hint">Click the card to open...</p>
+        <p id="click-hint">Tap the card to open...</p>
     </div>
 
     <script>
-        // Falling Petals Logic
         function createPetal() {
             const petal = document.createElement('div');
             petal.className = 'petal';
             petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.width = Math.random() * 15 + 10 + 'px';
+            petal.style.width = Math.random() * 12 + 8 + 'px';
             petal.style.height = petal.style.width;
             petal.style.animationDuration = Math.random() * 3 + 2 + 's';
             document.body.appendChild(petal);
@@ -214,23 +233,26 @@
         }
 
         const throwBtn = document.getElementById('throw-btn');
-        throwBtn.addEventListener('mouseover', () => {
-            const maxX = window.innerWidth - throwBtn.offsetWidth - 50;
-            const maxY = window.innerHeight - throwBtn.offsetHeight - 50;
+
+        // Combined logic for Desktop (Hover) and Mobile (Touch)
+        function moveButton(e) {
+            e.preventDefault(); 
+            const maxX = window.innerWidth - throwBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - throwBtn.offsetHeight - 20;
             throwBtn.style.position = 'fixed';
             throwBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
             throwBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
-        });
+            throwBtn.style.zIndex = "1000";
+        }
+
+        throwBtn.addEventListener('mouseover', moveButton);
+        throwBtn.addEventListener('touchstart', moveButton);
 
         function openGift() {
-            // Change background to pink gradient
             document.body.style.background = "linear-gradient(180deg, #ffdde1 0%, #ee9ca7 100%)";
-            
             document.getElementById('delivery-scene').style.display = 'none';
             document.getElementById('gift-scene').style.display = 'flex';
-            
-            // Start the petals
-            setInterval(createPetal, 300);
+            setInterval(createPetal, 400);
         }
 
         function toggleCard() {
